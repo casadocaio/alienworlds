@@ -11,7 +11,7 @@ function App() {
   const [pubKeys, setPubKeys] = useState([{}]);
   const [wax, setWax] = useState({});
 
-  //const wax = new waxjs.WaxJS('https://wax.greymass.com', null, null, false); //teste
+  //const wax = new waxjs.WaxJS('https://wax.greymass.com', null, null, false);
 
   useEffect(() => {
     if(pubKeys){
