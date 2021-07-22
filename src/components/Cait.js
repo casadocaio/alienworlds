@@ -8,7 +8,7 @@ function Cait({wax, userAccount}) {
     const [snakeDisplay, setSnakeDisplay] = useState("");
     const [contagem, setContagem] = useState(0);
 
-    let oscilador = useRef();
+    let osciladorCait = useRef();
 
 
     function getDiffMinutes(d){
@@ -20,10 +20,10 @@ function Cait({wax, userAccount}) {
 
         if(contagem > 0){
             setContagem(contagem - 1);
-            //oscilador.current = setTimeout(schedule, 1000);
+            //osciladorCait.current = setTimeout(schedule, 1000);
             setSnakeDisplay("Next attempt: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
         } else {
-            clearTimeout(oscilador.current);
+            clearTimeout(osciladorCait.current);
         }
     }
 
@@ -93,16 +93,16 @@ function Cait({wax, userAccount}) {
 
     useEffect(()=>{
         if(contagem > 0){
-            oscilador.current = setTimeout(schedule, 1000);
+            osciladorCait.current = setTimeout(schedule, 1000);
         } else {
-            clearTimeout(oscilador.current);
+            clearTimeout(osciladorCait.current);
         }
-    }, [contagem, schedule])
+    })
 
     /*botão para pegar as moedas*/
     async function onClick(){
 
-        console.log("queryJsonOnClick: ", queryJson);
+        //console.log("queryJsonOnClick: ", queryJson);
         if(!wax.api) {
             return document.getElementById('responseCait').append('* Login first *');
         }
@@ -125,7 +125,7 @@ function Cait({wax, userAccount}) {
                 expireSeconds: 30
             });
 
-            //console.log('retorno', JSON.stringify(result, null, 2));
+            console.log('retorno', JSON.stringify(result, null, 2));
             document.getElementById('responseCait').innerHTML = JSON.stringify(result, null, 2).transaction_id;
             setContagem(3600);
         } catch(e) {

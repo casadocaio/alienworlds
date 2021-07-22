@@ -8,7 +8,7 @@ function Snake({wax, userAccount}) {
     const [snakeDisplay, setSnakeDisplay] = useState("");
     const [contagem, setContagem] = useState(0);
 
-    let oscilador = useRef();
+    let osciladorSnake = useRef();
 
 
     function getDiffMinutes(d){
@@ -20,10 +20,10 @@ function Snake({wax, userAccount}) {
 
         if(contagem > 0){
             setContagem(contagem - 1);
-            //oscilador.current = setTimeout(schedule, 1000);
+            //osciladorSnake.current = setTimeout(schedule, 1000);
             setSnakeDisplay("Next attempt: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
         } else {
-            clearTimeout(oscilador.current);
+            clearTimeout(osciladorSnake.current);
         }
     }
 
@@ -92,17 +92,20 @@ function Snake({wax, userAccount}) {
     }, [lastActions]);
 
     useEffect(()=>{
-        if(contagem > 0){
-            oscilador.current = setTimeout(schedule, 1000);
-        } else {
-            clearTimeout(oscilador.current);
-        }
-    }, [contagem, schedule])
+        const vai = () => {
+            if(contagem > 0){
+                osciladorSnake.current = setTimeout(schedule, 1000);
+            } else {
+                clearTimeout(osciladorSnake.current);
+            }
+        };
+        vai();
+    })
 
     /*botão para pegar as moedas*/
     async function onClick(){
 
-        console.log("queryJsonOnClick: ", queryJson);
+        //console.log("queryJsonOnClick: ", queryJson);
         if(!wax.api) {
             return document.getElementById('responseSnake').append('* Login first *');
         }
@@ -125,7 +128,7 @@ function Snake({wax, userAccount}) {
                 expireSeconds: 30
             });
 
-            //console.log('retorno', JSON.stringify(result, null, 2));
+            console.log('retorno', JSON.stringify(result, null, 2));
             document.getElementById('responseSnake').innerHTML = JSON.stringify(result, null, 2).transaction_id;
             setContagem(3600);
         } catch(e) {
