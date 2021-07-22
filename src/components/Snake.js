@@ -21,9 +21,10 @@ function Snake({wax, userAccount}) {
         if(contagem > 0){
             setContagem(contagem - 1);
             //osciladorSnake.current = setTimeout(schedule, 1000);
-            setSnakeDisplay("Next attempt: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
+            setSnakeDisplay("Next claim: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
         } else {
             clearTimeout(osciladorSnake.current);
+            setSnakeDisabled(false);
         }
     }
 
@@ -129,7 +130,8 @@ function Snake({wax, userAccount}) {
             });
 
             console.log('retorno', JSON.stringify(result, null, 2));
-            document.getElementById('responseSnake').innerHTML = JSON.stringify(result, null, 2).transaction_id;
+            console.log('retornoid', JSON.stringify(result, null, 2).transaction_id);
+            document.getElementById('responseSnake').innerHTML = JSON.stringify(result, null, 2).transaction_id.toString();
             setContagem(3600);
         } catch(e) {
             document.getElementById('responseSnake').innerHTML = e.message;
