@@ -139,7 +139,7 @@ function Snake({wax, userAccount}) {
                 expireSeconds: 30
             });
 
-            setContractReturn(await JSON.stringify(result, null, 2).transaction_id.toString());
+            setContractReturn(result.transaction_id);
             setContagem(3600);
         } catch(e) {
             setContractReturn('error: ' + e.message);
@@ -162,7 +162,7 @@ function Snake({wax, userAccount}) {
                             {snakeDisplay}
                         </div>}
                         <div>
-                            <code id="responseSnake">{contractReturn}</code>
+                            <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>{contractReturn}</a></code>
                         </div>
                     </div>
                     }

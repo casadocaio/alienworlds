@@ -141,8 +141,9 @@ function Cait({wax, userAccount}) {
                 expireSeconds: 30
             });
 
-            setContractReturn(await JSON.stringify(result, null, 2).transaction_id.toString());
+            setContractReturn(result.transaction_id);
             setContagem(3600);
+            setSnakeDisabled(true);
         } catch(e) {
             setContractReturn('error: ' + e.message);
         }
@@ -163,7 +164,7 @@ function Cait({wax, userAccount}) {
                             {snakeDisplay}
                         </div>}
                         <div>
-                            <code id="responseCait">{contractReturn}</code>
+                            <code id="responseCait"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>{contractReturn}</a></code>
                         </div>
                     </div>
                     }
