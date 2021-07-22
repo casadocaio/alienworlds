@@ -4,9 +4,10 @@ function Cait({wax, userAccount}) {
 
     const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
-    const [snakeDisnabled, setSnakeDisabled] = useState(true);
+    const [snakeDisabled, setSnakeDisabled] = useState(true);
     const [snakeDisplay, setSnakeDisplay] = useState("");
     const [contagem, setContagem] = useState(0);
+    const [contractReturn, setContractReturn] = useState("");
 
     let osciladorCait = useRef();
 
@@ -20,7 +21,6 @@ function Cait({wax, userAccount}) {
 
         if(contagem > 0){
             setContagem(contagem - 1);
-            //osciladorCait.current = setTimeout(schedule, 1000);
             setSnakeDisplay("Next claim: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
         } else {
             setSnakeDisabled(false);
@@ -31,7 +31,11 @@ function Cait({wax, userAccount}) {
     useEffect(() => {
 
         if(userAccount){
-            fetch('https://api.waxsweden.org/v2/history/get_actions?limit=100&skip=0&account='+userAccount+'&sort=desc')
+            fetch('https://api.waxsweden.org/v2/history/get_actions?limit=100&skip=0&account='+userAccount+'&sort=desc'
+            /*, {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+              }*/)
             .then(response => response.json())
             .then(data => setQueryJson(data.actions));
         }
@@ -49,7 +53,8 @@ function Cait({wax, userAccount}) {
                     timestamp: q.timestamp,
                     time: data_corrigida,
                     symbol: q.act.data.symbol,
-                    quantity: q.act.data.quantity
+                    quantity: q.act.data.quantity,
+                    memo: q.act.data.memo,
                 }
             });
         }
@@ -65,7 +70,7 @@ function Cait({wax, userAccount}) {
             if(lastActions[0]){
                 if(lastActions[0].symbol){
                     lastActions.forEach(la => {
-                        if(la.symbol === "CAIT"){
+                        if(la.symbol === "CAIT" && !la.memo.includes("REWARDS")){
                             lastSnake.push({
                                 symbol: la.symbol,
                                 hora: la.time.getHours(),
@@ -93,11 +98,21 @@ function Cait({wax, userAccount}) {
     }, [lastActions]);
 
     useEffect(()=>{
-        if(contagem > 0){
-            osciladorCait.current = setTimeout(schedule, 1000);
-        } else {
-            clearTimeout(osciladorCait.current);
-        }
+        
+        const vai = () => {
+            if(contagem <= 1){
+                setSnakeDisabled(false);
+            }
+
+            if(contagem > 0){
+                setSnakeDisabled(true);
+                osciladorCait.current = setTimeout(schedule, 1000);
+            } else {
+                //setSnakeDisabled(false);
+                clearTimeout(osciladorCait.current);
+            }
+        };
+        vai();
     })
 
     /*botão para pegar as moedas*/
@@ -126,12 +141,10 @@ function Cait({wax, userAccount}) {
                 expireSeconds: 30
             });
 
-            console.log('retorno', JSON.stringify(result, null, 2));
-            console.log('retornoid', JSON.stringify(result, null, 2).transaction_id);
-            document.getElementById('responseCait').innerHTML = JSON.stringify(result, null, 2).transaction_id.toString();
+            setContractReturn(await JSON.stringify(result, null, 2).transaction_id.toString());
             setContagem(3600);
         } catch(e) {
-            document.getElementById('responseCait').innerHTML = e.message;
+            setContractReturn('error: ' + e.message);
         }
     }
 
@@ -142,15 +155,15 @@ function Cait({wax, userAccount}) {
                     {userAccount && 
                     <div>
                         <p>Claim your CAIT: </p>
-                        <button className="btnlogin" onClick={onClick} disabled={snakeDisnabled}>
+                        <button className="btnlogin" onClick={onClick} disabled={snakeDisabled}>
                                 Ready to claim
                         </button>
                         <br />
-                        {snakeDisnabled && <div>
+                        {snakeDisabled && <div>
                             {snakeDisplay}
                         </div>}
                         <div>
-                            <code id="responseCait"></code>
+                            <code id="responseCait">{contractReturn}</code>
                         </div>
                     </div>
                     }

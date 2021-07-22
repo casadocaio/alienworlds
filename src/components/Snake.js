@@ -4,9 +4,10 @@ function Snake({wax, userAccount}) {
 
     const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
-    const [snakeDisnabled, setSnakeDisabled] = useState(true);
+    const [snakeDisabled, setSnakeDisabled] = useState(true);
     const [snakeDisplay, setSnakeDisplay] = useState("");
     const [contagem, setContagem] = useState(0);
+    const [contractReturn, setContractReturn] = useState("");
 
     let osciladorSnake = useRef();
 
@@ -16,10 +17,13 @@ function Snake({wax, userAccount}) {
     }
 
     function schedule(){
-        //console.log('contagem', contagem);
-
         if(contagem > 0){
             setContagem(contagem - 1);
+            if(contagem - 1 === 0){
+                setSnakeDisabled(false);
+            }if(contagem === 1){
+                setSnakeDisabled(false);
+            }
             //osciladorSnake.current = setTimeout(schedule, 1000);
             setSnakeDisplay("Next claim: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
         } else {
@@ -94,9 +98,15 @@ function Snake({wax, userAccount}) {
 
     useEffect(()=>{
         const vai = () => {
+            if(contagem <= 1){
+                setSnakeDisabled(false);
+            }
+
             if(contagem > 0){
+                setSnakeDisabled(true);
                 osciladorSnake.current = setTimeout(schedule, 1000);
             } else {
+                //setSnakeDisabled(false);
                 clearTimeout(osciladorSnake.current);
             }
         };
@@ -129,12 +139,11 @@ function Snake({wax, userAccount}) {
                 expireSeconds: 30
             });
 
-            console.log('retorno', JSON.stringify(result, null, 2));
-            console.log('retornoid', JSON.stringify(result, null, 2).transaction_id);
-            document.getElementById('responseSnake').innerHTML = JSON.stringify(result, null, 2).transaction_id.toString();
+            setContractReturn(await JSON.stringify(result, null, 2).transaction_id.toString());
             setContagem(3600);
         } catch(e) {
-            document.getElementById('responseSnake').innerHTML = e.message;
+            setContractReturn('error: ' + e.message);
+            setContagem(3600);
         }
     }
 
@@ -145,15 +154,15 @@ function Snake({wax, userAccount}) {
                     {userAccount && 
                     <div>
                         <p>Claim your SNAKOIL: </p>
-                        <button className="btnlogin" onClick={onClick} disabled={snakeDisnabled}>
+                        <button className="btnlogin" onClick={onClick} disabled={snakeDisabled}>
                                 Ready to claim
                         </button>
                         <br />
-                        {snakeDisnabled && <div>
+                        {snakeDisabled && <div>
                             {snakeDisplay}
                         </div>}
                         <div>
-                            <code id="responseSnake"></code>
+                            <code id="responseSnake">{contractReturn}</code>
                         </div>
                     </div>
                     }
