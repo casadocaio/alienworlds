@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import TopBar from './components/TopBar';
 import Snake from './components/Snake';
+import Cait from './components/Cait';
 
 import './App.css';
 
@@ -29,17 +30,31 @@ function App() {
         />
       </div>
       {userAccount &&
-      <div className="topbar">
-        <Snake 
-            userAccount={userAccount}
-            setUserAccount={setUserAccount}
-            donateValue={donateValue}
-            setDonateValue={setDonateValue}
-            pubKeys={pubKeys}
-            setPubKeys={setPubKeys}
-            wax={wax}
-            setWax={setWax}
-          />
+      <div>
+        <div className="topbar">
+          <Snake 
+              userAccount={userAccount}
+              setUserAccount={setUserAccount}
+              donateValue={donateValue}
+              setDonateValue={setDonateValue}
+              pubKeys={pubKeys}
+              setPubKeys={setPubKeys}
+              wax={wax}
+              setWax={setWax}
+            />
+          </div>
+          <div className="topbar">
+          <Cait 
+              userAccount={userAccount}
+              setUserAccount={setUserAccount}
+              donateValue={donateValue}
+              setDonateValue={setDonateValue}
+              pubKeys={pubKeys}
+              setPubKeys={setPubKeys}
+              wax={wax}
+              setWax={setWax}
+            />
+          </div>
         </div>
       }
     </div>

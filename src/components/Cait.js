@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function Snake({wax, userAccount}) {
+function Cait({wax, userAccount}) {
 
     const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
@@ -64,7 +64,7 @@ function Snake({wax, userAccount}) {
             if(lastActions[0]){
                 if(lastActions[0].symbol){
                     lastActions.forEach(la => {
-                        if(la.symbol === "SNAKOIL"){
+                        if(la.symbol === "CAIT"){
                             lastSnake.push({
                                 symbol: la.symbol,
                                 hora: la.time.getHours(),
@@ -104,20 +104,20 @@ function Snake({wax, userAccount}) {
 
         console.log("queryJsonOnClick: ", queryJson);
         if(!wax.api) {
-            return document.getElementById('responseSnake').append('* Login first *');
+            return document.getElementById('responseCait').append('* Login first *');
         }
 
         try {
             const result = await wax.api.transact({
                 actions: [{
-                    account: 'novarallysnk',
+                    account: 'faucet.gm',
                     name: 'claim',
                     authorization: [{
                     actor: wax.userAccount,
                     permission: 'active',
                     }],
                     data: {
-                        username: wax.userAccount,
+                        user: wax.userAccount,
                     },
                 }]
                 }, {
@@ -126,10 +126,10 @@ function Snake({wax, userAccount}) {
             });
 
             //console.log('retorno', JSON.stringify(result, null, 2));
-            document.getElementById('responseSnake').innerHTML = JSON.stringify(result, null, 2).transaction_id;
+            document.getElementById('responseCait').innerHTML = JSON.stringify(result, null, 2).transaction_id;
             setContagem(3600);
         } catch(e) {
-            document.getElementById('responseSnake').innerHTML = e.message;
+            document.getElementById('responseCait').innerHTML = e.message;
         }
     }
 
@@ -139,7 +139,7 @@ function Snake({wax, userAccount}) {
                 <>
                     {userAccount && 
                     <div>
-                        <p>Claim your SNAKOIL: </p>
+                        <p>Claim your CAIT: </p>
                         <button className="btnlogin" onClick={onClick} disabled={snakeDisnabled}>
                                 Ready to claim
                         </button>
@@ -148,7 +148,7 @@ function Snake({wax, userAccount}) {
                             {snakeDisplay}
                         </div>}
                         <div>
-                            <code id="responseSnake"></code>
+                            <code id="responseCait"></code>
                         </div>
                     </div>
                     }
@@ -158,4 +158,4 @@ function Snake({wax, userAccount}) {
     );
 }
 
-export default Snake;
+export default Cait;
