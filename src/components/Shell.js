@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function Snake({wax, userAccount}) {
+function Shell({wax, userAccount}) {
 
     const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
@@ -9,7 +9,7 @@ function Snake({wax, userAccount}) {
     const [contagem, setContagem] = useState(0);
     const [contractReturn, setContractReturn] = useState("");
 
-    let osciladorSnake = useRef();
+    let osciladorCait = useRef();
 
 
     function getDiffMinutes(d){
@@ -17,25 +17,25 @@ function Snake({wax, userAccount}) {
     }
 
     function schedule(){
+        //console.log('contagem', contagem);
+
         if(contagem > 0){
             setContagem(contagem - 1);
-            if(contagem - 1 === 0){
-                setSnakeDisabled(false);
-            }if(contagem === 1){
-                setSnakeDisabled(false);
-            }
-            //osciladorSnake.current = setTimeout(schedule, 1000);
             setSnakeDisplay("Next claim: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
         } else {
-            clearTimeout(osciladorSnake.current);
             setSnakeDisabled(false);
+            clearTimeout(osciladorCait.current);
         }
     }
 
     useEffect(() => {
 
         if(userAccount){
-            fetch('https://api.waxsweden.org/v2/history/get_actions?limit=100&skip=0&account='+userAccount+'&sort=desc')
+            fetch('https://api.waxsweden.org/v2/history/get_actions?limit=100&skip=0&account='+userAccount+'&sort=desc'
+            /*, {
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+              }*/)
             .then(response => response.json())
             .then(data => setQueryJson(data.actions));
         }
@@ -53,7 +53,8 @@ function Snake({wax, userAccount}) {
                     timestamp: q.timestamp,
                     time: data_corrigida,
                     symbol: q.act.data.symbol,
-                    quantity: q.act.data.quantity
+                    quantity: q.act.data.quantity,
+                    memo: q.act.data.memo,
                 }
             });
         }
@@ -69,7 +70,7 @@ function Snake({wax, userAccount}) {
             if(lastActions[0]){
                 if(lastActions[0].symbol){
                     lastActions.forEach(la => {
-                        if(la.symbol === "SNAKOIL"){
+                        if(la.symbol === "SHELL" && !la.memo.includes("REWARDS")){
                             lastSnake.push({
                                 symbol: la.symbol,
                                 hora: la.time.getHours(),
@@ -97,6 +98,7 @@ function Snake({wax, userAccount}) {
     }, [lastActions]);
 
     useEffect(()=>{
+        
         const vai = () => {
             if(contagem <= 1){
                 setSnakeDisabled(false);
@@ -104,10 +106,10 @@ function Snake({wax, userAccount}) {
 
             if(contagem > 0){
                 setSnakeDisabled(true);
-                osciladorSnake.current = setTimeout(schedule, 1000);
+                osciladorCait.current = setTimeout(schedule, 1000);
             } else {
                 //setSnakeDisabled(false);
-                clearTimeout(osciladorSnake.current);
+                clearTimeout(osciladorCait.current);
             }
         };
         vai();
@@ -118,20 +120,20 @@ function Snake({wax, userAccount}) {
 
         //console.log("queryJsonOnClick: ", queryJson);
         if(!wax.api) {
-            return document.getElementById('responseSnake').append('* Login first *');
+            return document.getElementById('responseShell').append('* Login first *');
         }
 
         try {
             const result = await wax.api.transact({
                 actions: [{
-                    account: 'novarallysnk',
+                    account: 'staking.gr',
                     name: 'claim',
                     authorization: [{
                     actor: wax.userAccount,
                     permission: 'active',
                     }],
                     data: {
-                        username: wax.userAccount,
+                        user: wax.userAccount,
                     },
                 }]
                 }, {
@@ -141,9 +143,9 @@ function Snake({wax, userAccount}) {
 
             setContractReturn(result.transaction_id);
             setContagem(3600);
+            setSnakeDisabled(true);
         } catch(e) {
             setContractReturn('error: ' + e.message);
-            setContagem(3600);
         }
     }
 
@@ -153,7 +155,7 @@ function Snake({wax, userAccount}) {
                 <>
                     {userAccount && 
                     <div>
-                        <p>Claim your SNAKOIL: </p>
+                        <p>Claim your CAIT: </p>
                         <button className="btnlogin" onClick={onClick} disabled={snakeDisabled}>
                                 Gimme dat!
                         </button>
@@ -162,7 +164,7 @@ function Snake({wax, userAccount}) {
                             {snakeDisplay}
                         </div>}
                         <div>
-                            <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View Last Transaction</a></code>
+                            <code id="responseShell"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View Last Transaction</a></code>
                         </div>
                     </div>
                     }
@@ -172,4 +174,4 @@ function Snake({wax, userAccount}) {
     );
 }
 
-export default Snake;
+export default Shell;

@@ -157,14 +157,14 @@ function Cait({wax, userAccount}) {
                     <div>
                         <p>Claim your CAIT: </p>
                         <button className="btnlogin" onClick={onClick} disabled={snakeDisabled}>
-                                Ready to claim
+                                Gimme dat!
                         </button>
                         <br />
                         {snakeDisabled && <div>
                             {snakeDisplay}
                         </div>}
                         <div>
-                            <code id="responseCait"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>{contractReturn}</a></code>
+                            <code id="responseCait"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View Last Transaction</a></code>
                         </div>
                     </div>
                     }

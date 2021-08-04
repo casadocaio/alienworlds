@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import TopBar from './components/TopBar';
 import Snake from './components/Snake';
 import Cait from './components/Cait';
+import Shell from './components/Shell';
 
 import './App.css';
 
@@ -45,6 +46,18 @@ function App() {
           </div>
           <div className="topbar">
           <Cait 
+              userAccount={userAccount}
+              setUserAccount={setUserAccount}
+              donateValue={donateValue}
+              setDonateValue={setDonateValue}
+              pubKeys={pubKeys}
+              setPubKeys={setPubKeys}
+              wax={wax}
+              setWax={setWax}
+            />
+          </div>
+          <div className="topbar">
+          <Shell 
               userAccount={userAccount}
               setUserAccount={setUserAccount}
               donateValue={donateValue}
