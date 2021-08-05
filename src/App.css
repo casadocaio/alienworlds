@@ -6,7 +6,11 @@
 
 .topbar {
   background-color: #F2EFDF;
-  min-height: 50px;
+  min-height: 80px;
   width: 100%;
+}
 
+.padrao {
+  min-height: 80px;
+  width: 100%;
 }

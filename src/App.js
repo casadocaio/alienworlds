@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import TopBar from './components/TopBar';
 import Snake from './components/Snake';
 import Cait from './components/Cait';
-import Shell from './components/Shell';
+import TLM from './components/TLM';
 
 import './App.css';
 
@@ -32,7 +32,7 @@ function App() {
       </div>
       {userAccount &&
       <div>
-        <div className="topbar">
+        <div className="topbar padrao">
           <Snake 
               userAccount={userAccount}
               setUserAccount={setUserAccount}
@@ -57,7 +57,7 @@ function App() {
             />
           </div>
           <div className="topbar">
-          <Shell 
+          <TLM 
               userAccount={userAccount}
               setUserAccount={setUserAccount}
               donateValue={donateValue}
