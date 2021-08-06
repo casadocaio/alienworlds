@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import TopBar from './components/TopBar';
 import Snake from './components/Snake';
 import Cait from './components/Cait';
+import OLV from './components/OLV';
 import TLM from './components/TLM';
 
 import './App.css';
@@ -32,8 +33,8 @@ function App() {
       </div>
       {userAccount &&
       <div>
-        <div className="topbar padrao">
-          <Snake 
+          <div className="topbar">
+            <Cait 
               userAccount={userAccount}
               setUserAccount={setUserAccount}
               donateValue={donateValue}
@@ -44,20 +45,32 @@ function App() {
               setWax={setWax}
             />
           </div>
-          <div className="topbar">
-          <Cait 
-              userAccount={userAccount}
-              setUserAccount={setUserAccount}
-              donateValue={donateValue}
-              setDonateValue={setDonateValue}
-              pubKeys={pubKeys}
-              setPubKeys={setPubKeys}
-              wax={wax}
-              setWax={setWax}
-            />
+          <div className="topbar padrao">
+            <Snake 
+                userAccount={userAccount}
+                setUserAccount={setUserAccount}
+                donateValue={donateValue}
+                setDonateValue={setDonateValue}
+                pubKeys={pubKeys}
+                setPubKeys={setPubKeys}
+                wax={wax}
+                setWax={setWax}
+              />
+          </div>
+          <div className="topbar padrao">
+            <OLV 
+                userAccount={userAccount}
+                setUserAccount={setUserAccount}
+                donateValue={donateValue}
+                setDonateValue={setDonateValue}
+                pubKeys={pubKeys}
+                setPubKeys={setPubKeys}
+                wax={wax}
+                setWax={setWax}
+              />
           </div>
           <div className="topbar">
-          <TLM 
+            <TLM 
               userAccount={userAccount}
               setUserAccount={setUserAccount}
               donateValue={donateValue}

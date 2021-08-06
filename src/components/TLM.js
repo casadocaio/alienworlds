@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
 
-function TLM({userAccount}) {
+function TLM({ userAccount }) {
 
     const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
     const [lstMedia, setLstMedia] = useState([{}]);
+    const [rows, setRows] = useState([]);
 
-    function getDiffMinutes(d){
-        return Math.floor(((Date.now() - d)/1000)/60)
+    function getDiffMinutes(d) {
+        return Math.floor(((Date.now() - d) / 1000) / 60)
     }
 
     useEffect(() => {
 
-        if(userAccount){
-            fetch('https://api.waxsweden.org/v2/history/get_actions?limit=1000&skip=0&account='+userAccount+'&sort=desc'
+        if (userAccount) {
+            fetch('https://api.waxsweden.org/v2/history/get_actions?limit=1000&skip=0&account=' + userAccount + '&sort=desc'
             /*, {
                 method: 'GET', // *GET, POST, PUT, DELETE, etc.
                 referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
               }*/)
-            .then(response => response.json())
-            .then(data => setQueryJson(data.actions));
+                .then(response => response.json())
+                .then(data => setQueryJson(data.actions));
         }
 
     }, [userAccount]);
@@ -27,7 +28,7 @@ function TLM({userAccount}) {
     useEffect(() => {
         let tratado = [];
 
-        if(queryJson[0].act){
+        if (queryJson[0].act) {
             tratado = queryJson.map(q => {
                 let data_corrigida = new Date(new Date(q.timestamp).setHours(new Date(q.timestamp).getHours() - (new Date(q.timestamp).getTimezoneOffset() / 60)))
 
@@ -42,17 +43,17 @@ function TLM({userAccount}) {
         }
 
         setLastActions(tratado);
-  
+
     }, [queryJson]);
 
     useEffect(() => {
-        let lastSnake =[];
+        let lastSnake = [];
 
-        if(lastActions){
-            if(lastActions[0]){
-                if(lastActions[0].symbol){
+        if (lastActions) {
+            if (lastActions[0]) {
+                if (lastActions[0].symbol) {
                     lastActions.forEach(la => {
-                        if(la.symbol === "TLM" && la.memo.includes("Mined Trilium")){
+                        if (la.symbol === "TLM" && la.memo.includes("Mined Trilium")) {
                             lastSnake.push({
                                 symbol: la.symbol,
                                 quantity: la.quantity.replace(' TLM', ''),
@@ -69,19 +70,19 @@ function TLM({userAccount}) {
             }
         }
 
-        if(lastSnake[0]){
-            console.log('ver lastSnake', lastSnake);
+        if (lastSnake[0]) {
+            //console.log('ver lastSnake', lastSnake);
 
             let dias = [];
             let consolidado = [];
 
             lastSnake.forEach(ls => {
-                if(!dias.includes(ls.day)){
+                if (!dias.includes(ls.day)) {
                     dias.push(ls.day);
                 }
             });
 
-            console.log('ver dias', dias);
+            //console.log('ver dias', dias);
 
             dias.forEach(d => {
                 let filtrado = dadosDia(lastSnake, d);
@@ -101,9 +102,9 @@ function TLM({userAccount}) {
                 });
 
                 consolidado[dias.indexOf(d)] = { day: d, qtd: qtd, sum: sum, min: min, max: max, avg: avg }
-            });            
+            });
 
-            console.log('ver consolidado', consolidado);
+            //console.log('ver consolidado', consolidado);
 
             setLstMedia(consolidado)
 
@@ -113,23 +114,61 @@ function TLM({userAccount}) {
 
     }, [lastActions]);
 
-    function dadosDia(dados, dia){
+    function dadosDia(dados, dia) {
         return dados.filter(dd => {
-            if(dd.day === dia){
+            if (dd.day === dia) {
                 return dd;
             }
             return false
         });
     }
 
+    useEffect(() => {
+
+        let tmprows = [];
+
+        let cabecalho = []
+        cabecalho.push(<td key={`cell${0}-${1}`} id={`cell${0}-${1}`}>Dia</td>)
+        cabecalho.push(<td key={`cell${0}-${2}`} id={`cell${0}-${2}`}>Cliques</td>)
+        cabecalho.push(<td key={`cell${0}-${3}`} id={`cell${0}-${3}`}>Total</td>)
+        cabecalho.push(<td key={`cell${0}-${4}`} id={`cell${0}-${4}`}>Média</td>)
+        cabecalho.push(<td key={`cell${0}-${5}`} id={`cell${0}-${5}`}>Max</td>)
+        cabecalho.push(<td key={`cell${0}-${6}`} id={`cell${0}-${6}`}>Min</td>)
+        tmprows.push(<tr key={0} id={`row${0}`}>{cabecalho}</tr>)
+
+        //console.log('lstMedia', lstMedia);
+
+        if (lstMedia && lstMedia.length > 1) {
+            for (var i = 0; i < lstMedia.length; i++) {
+                let rowID = `row${i + 1}`
+                let cell = []
+                cell.push(<td key={`cell${i + 1}-${1}`} id={`cell${i + 1}-${1}`}>{lstMedia[i].day}</td>)
+                cell.push(<td key={`cell${i + 1}-${2}`} id={`cell${i + 1}-${2}`}>{lstMedia[i].qtd}</td>)
+                cell.push(<td key={`cell${i + 1}-${3}`} id={`cell${i + 1}-${3}`}>{Math.round(lstMedia[i].sum * 100) / 100}</td>)
+                cell.push(<td key={`cell${i + 1}-${4}`} id={`cell${i + 1}-${4}`}>{Math.round(lstMedia[i].avg * 100) / 100}</td>)
+                cell.push(<td key={`cell${i + 1}-${5}`} id={`cell${i + 1}-${5}`}>{lstMedia[i].max}</td>)
+                cell.push(<td key={`cell${i + 1}-${6}`} id={`cell${i + 1}-${6}`}>{lstMedia[i].min}</td>)
+                tmprows.push(<tr key={i + 1} id={rowID}>{cell}</tr>)
+            }
+        }
+
+        setRows(tmprows);
+
+    }, [lstMedia]);
+
     return (
         <div  >
-            {userAccount && 
+            {userAccount &&
                 <>
-                    {userAccount && 
-                    <div>
-                        <p>{lstMedia.toString()}</p>
-                    </div>
+                    {userAccount &&
+                        <div>
+                            <p>Alien Worlds stats: </p>
+                            <table id="simple-board">
+                                <tbody>
+                                    {rows}
+                                </tbody>
+                            </table>
+                        </div>
                     }
                 </>
             }
