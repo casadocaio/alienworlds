@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function OLV({wax, userAccount}) {
+function OLV({wax, userAccount, queryJson, setQueryJson}) {
 
-    const [queryJson, setQueryJson] = useState([{}]);
+    //const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
     const [snakeDisabled, setSnakeDisabled] = useState(true);
     const [snakeDisplay, setSnakeDisplay] = useState("");
@@ -28,19 +28,15 @@ function OLV({wax, userAccount}) {
         }
     }
 
-    useEffect(() => {
+   /* useEffect(() => {
 
         if(userAccount){
-            fetch('https://api.waxsweden.org/v2/history/get_actions?limit=100&skip=0&account='+userAccount+'&sort=desc'
-            /*, {
-                method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-              }*/)
+            fetch('https://api.waxsweden.org/v2/history/get_actions?limit=100&skip=0&account='+userAccount+'&sort=desc')
             .then(response => response.json())
             .then(data => setQueryJson(data.actions));
         }
 
-    }, [userAccount]);
+    }, [userAccount]);*/
 
     useEffect(() => {
         let tratado = [];

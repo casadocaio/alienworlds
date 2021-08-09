@@ -1,16 +1,47 @@
+:root {
+  --cinzaclaro:#BFBFBF;
+  --cinzaescuro:#585759;
+  --azulescuro:#0487D9;
+  --azulclaro:#05AFF2;
+  --marrom:#A67665;
+}
+
 .App{
  display: flex;
  flex-flow: row wrap;
- justify-content: flex-end;
+ justify-content: center;
+ background-color: var(--cinzaclaro);
 }
 
 .topbar {
-  background-color: #F2EFDF;
+  background-color: var(--cinzaclaro);
   min-height: 80px;
   width: 100%;
+  height: 100%;
+  text-align: center;
 }
 
 .padrao {
   min-height: 80px;
   width: 100%;
+}
+
+.btnlogin {
+  align-content: center;
+}
+
+.fichaClaim{
+  flex-grow: 1;
+}
+
+.fichaTable{
+  flex-grow: 1;
+}
+
+.cabecalho {
+  background-color: var(--cinzaescuro);
+}
+
+table {
+  border: 0;
 }

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function Snake({wax, userAccount}) {
+function Snake({wax, userAccount, queryJson, setQueryJson}) {
 
-    const [queryJson, setQueryJson] = useState([{}]);
+    //const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
     const [snakeDisabled, setSnakeDisabled] = useState(true);
     const [snakeDisplay, setSnakeDisplay] = useState("");
@@ -32,7 +32,7 @@ function Snake({wax, userAccount}) {
         }
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
 
         if(userAccount){
             fetch('https://api.waxsweden.org/v2/history/get_actions?limit=100&skip=0&account='+userAccount+'&sort=desc')
@@ -40,7 +40,7 @@ function Snake({wax, userAccount}) {
             .then(data => setQueryJson(data.actions));
         }
 
-    }, [userAccount]);
+    }, [userAccount]);*/
 
     useEffect(() => {
         let tratado = [];
