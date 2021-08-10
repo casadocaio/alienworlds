@@ -33,9 +33,9 @@ function TopBar({wax, setWax, userAccount, setUserAccount,pubKeys, setPubKeys}) 
                 Cloud wallet Login
             </button>}
             {userAccount && 
-                <>
-                    <p>Logged in as: {userAccount}</p>
-                </>
+                <div className="cabecalhoLogin">
+                    <p> {userAccount}</p>
+                </div>
             }
         </div>
     );

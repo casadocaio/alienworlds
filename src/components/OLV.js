@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function OLV({wax, userAccount, queryJson, setQueryJson}) {
+import olive from '../assets/olive.png';
+
+function OLV({ wax, userAccount, queryJson, setQueryJson }) {
 
     //const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
@@ -9,39 +11,40 @@ function OLV({wax, userAccount, queryJson, setQueryJson}) {
     const [contagem, setContagem] = useState(0);
     const [contractReturn, setContractReturn] = useState("");
 
-    let osciladorCait = useRef();
+    let osciladorOLV = useRef();
 
 
-    function getDiffMinutes(d){
-        return Math.floor(((Date.now() - d)/1000)/60)
+    function getDiffMinutes(d) {
+        return Math.floor(((Date.now() - d) / 1000) / 60)
     }
 
-    function schedule(){
+    function schedule() {
         //console.log('contagem', contagem);
 
-        if(contagem > 0){
+        if (contagem > 0) {
             setContagem(contagem - 1);
-            setSnakeDisplay("Next claim: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
+            setSnakeDisplay(new Date(contagem * 1000).toISOString().substr(11, 8).toString());
         } else {
             setSnakeDisabled(false);
-            clearTimeout(osciladorCait.current);
+            clearTimeout(osciladorOLV.current);
         }
     }
 
-   /* useEffect(() => {
-
-        if(userAccount){
-            fetch('https://api.waxsweden.org/v2/history/get_actions?limit=100&skip=0&account='+userAccount+'&sort=desc')
-            .then(response => response.json())
-            .then(data => setQueryJson(data.actions));
-        }
-
-    }, [userAccount]);*/
+    /* useEffect(() => {
+ 
+         if(userAccount){
+             fetch('https://api.waxsweden.org/v2/history/get_actions?limit=100&skip=0&account='+userAccount+'&sort=desc')
+             .then(response => response.json())
+             .then(data => setQueryJson(data.actions));
+         }
+ 
+     }, [userAccount]);*/
 
     useEffect(() => {
         let tratado = [];
 
-        if(queryJson[0].act){
+        if (queryJson[0].act) {
+            clearTimeout(osciladorOLV.current);
             tratado = queryJson.map(q => {
                 let data_corrigida = new Date(new Date(q.timestamp).setHours(new Date(q.timestamp).getHours() - (new Date(q.timestamp).getTimezoneOffset() / 60)))
 
@@ -56,17 +59,17 @@ function OLV({wax, userAccount, queryJson, setQueryJson}) {
         }
 
         setLastActions(tratado);
-  
+
     }, [queryJson]);
 
     useEffect(() => {
-        let lastSnake =[];
+        let lastSnake = [];
 
-        if(lastActions){
-            if(lastActions[0]){
-                if(lastActions[0].symbol){
+        if (lastActions) {
+            if (lastActions[0]) {
+                if (lastActions[0].symbol) {
                     lastActions.forEach(la => {
-                        if(la.symbol === "OLV" && !la.memo.includes("REWARDS")){
+                        if (la.symbol === "OLV" && !la.memo.includes("REWARDS")) {
                             lastSnake.push({
                                 symbol: la.symbol,
                                 hora: la.time.getHours(),
@@ -79,8 +82,8 @@ function OLV({wax, userAccount, queryJson, setQueryJson}) {
             }
         }
 
-        if(lastSnake[0]){
-            if(lastSnake[0].diff > 60){
+        if (lastSnake[0]) {
+            if (lastSnake[0].diff > 60) {
                 setSnakeDisabled(false);
                 setContagem(0);
             } else {
@@ -93,80 +96,82 @@ function OLV({wax, userAccount, queryJson, setQueryJson}) {
 
     }, [lastActions]);
 
-    useEffect(()=>{
-        
+    useEffect(() => {
+
         const vai = () => {
-            if(contagem <= 1){
+            if (contagem <= 1) {
                 setSnakeDisabled(false);
             }
 
-            if(contagem > 0){
+            if (contagem > 0) {
                 setSnakeDisabled(true);
-                osciladorCait.current = setTimeout(schedule, 1000);
+                osciladorOLV.current = setTimeout(schedule, 1000);
             } else {
                 //setSnakeDisabled(false);
-                clearTimeout(osciladorCait.current);
+                clearTimeout(osciladorOLV.current);
             }
         };
         vai();
     })
 
     /*botão para pegar as moedas*/
-    async function onClick(){
+    async function onClick() {
+        if (!snakeDisabled) {
+            //console.log("queryJsonOnClick: ", queryJson);
+            if (!wax.api) {
+                return document.getElementById('responseOlv').append('* Login first *');
+            }
 
-        //console.log("queryJsonOnClick: ", queryJson);
-        if(!wax.api) {
-            return document.getElementById('responseCait').append('* Login first *');
-        }
-
-        try {
-            const result = await wax.api.transact({
-                actions: [{
-                    account: 'olivelandstk',
-                    name: 'claim',
-                    authorization: [{
-                    actor: wax.userAccount,
-                    permission: 'active',
-                    }],
-                    data: {
-                        username: wax.userAccount,
-                    },
-                }]
+            try {
+                const result = await wax.api.transact({
+                    actions: [{
+                        account: 'olivelandstk',
+                        name: 'claim',
+                        authorization: [{
+                            actor: wax.userAccount,
+                            permission: 'active',
+                        }],
+                        data: {
+                            username: wax.userAccount,
+                        },
+                    }]
                 }, {
-                blocksBehind: 3,
-                expireSeconds: 30
-            });
+                    blocksBehind: 3,
+                    expireSeconds: 30
+                });
 
-            setContractReturn(result.transaction_id);
-            setContagem(3600);
-            setSnakeDisabled(true);
-        } catch(e) {
-            setContractReturn('error: ' + e.message);
+                setContractReturn(result.transaction_id);
+                setContagem(3600);
+                setSnakeDisabled(true);
+            } catch (e) {
+                setContractReturn('error: ' + e.message);
+            }
         }
     }
 
     return (
-        <div  >
-            {userAccount && 
+        <>
+            {userAccount &&
                 <>
-                    {userAccount && 
-                    <div>
-                        <p>Claim your OLV: </p>
-                        <button className="btnlogin" onClick={onClick} disabled={snakeDisabled}>
-                                Gimme dat!
-                        </button>
-                        <br />
-                        {snakeDisabled && <div>
-                            {snakeDisplay}
-                        </div>}
-                        <div>
-                            <code id="responseOLV"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View Last Transaction</a></code>
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={onClick}>
+                            <div className="image-cropper"><img src={olive} alt="Oliveland" className="logoCoin"></img></div>
+                            <div >
+                                {snakeDisabled && <div className="displayTimer">
+                                    {snakeDisplay}
+                                </div>}
+                                <div>
+                                    {contractReturn.includes('error')
+                                        ? <code id="responseOlv">{contractReturn}</code>
+                                        : <code id="responseOlv"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View on Bloks</a></code>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     }
                 </>
             }
-        </div>
+        </>
     );
 }
 

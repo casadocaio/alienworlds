@@ -46,7 +46,7 @@ function App() {
       </div>
       {userAccount &&
         <div>
-          <div className="fichaClaim">
+          <div>
             <Cait
               userAccount={userAccount}
               setUserAccount={setUserAccount}
@@ -60,7 +60,7 @@ function App() {
               setQueryJson={setQueryJson}
             />
           </div>
-          <div className="fichaClaim">
+          <div>
             <Snake
               userAccount={userAccount}
               setUserAccount={setUserAccount}
@@ -74,7 +74,7 @@ function App() {
               setQueryJson={setQueryJson}
             />
           </div>
-          <div className="fichaClaim">
+          <div>
             <OLV
               userAccount={userAccount}
               setUserAccount={setUserAccount}
@@ -88,7 +88,7 @@ function App() {
               setQueryJson={setQueryJson}
             />
           </div>
-          <div className="fichaTable">
+          <div>
             <TLM
               userAccount={userAccount}
               setUserAccount={setUserAccount}

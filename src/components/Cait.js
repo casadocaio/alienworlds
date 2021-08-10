@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function Cait({wax, userAccount, queryJson, setQueryJson}) {
+import cait from '../assets/cait.png';
+
+function Cait({ wax, userAccount, queryJson, setQueryJson }) {
 
     //const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
@@ -12,16 +14,16 @@ function Cait({wax, userAccount, queryJson, setQueryJson}) {
     let osciladorCait = useRef();
 
 
-    function getDiffMinutes(d){
-        return Math.floor(((Date.now() - d)/1000)/60)
+    function getDiffMinutes(d) {
+        return Math.floor(((Date.now() - d) / 1000) / 60)
     }
 
-    function schedule(){
+    function schedule() {
         //console.log('contagem', contagem);
 
-        if(contagem > 0){
+        if (contagem > 0) {
             setContagem(contagem - 1);
-            setSnakeDisplay("Next claim: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
+            setSnakeDisplay(new Date(contagem * 1000).toISOString().substr(11, 8).toString());
         } else {
             setSnakeDisabled(false);
             clearTimeout(osciladorCait.current);
@@ -41,7 +43,8 @@ function Cait({wax, userAccount, queryJson, setQueryJson}) {
     useEffect(() => {
         let tratado = [];
 
-        if(queryJson[0].act){
+        if (queryJson[0].act) {
+            clearTimeout(osciladorCait.current);
             tratado = queryJson.map(q => {
                 let data_corrigida = new Date(new Date(q.timestamp).setHours(new Date(q.timestamp).getHours() - (new Date(q.timestamp).getTimezoneOffset() / 60)))
 
@@ -56,17 +59,17 @@ function Cait({wax, userAccount, queryJson, setQueryJson}) {
         }
 
         setLastActions(tratado);
-  
+
     }, [queryJson]);
 
     useEffect(() => {
-        let lastSnake =[];
+        let lastSnake = [];
 
-        if(lastActions){
-            if(lastActions[0]){
-                if(lastActions[0].symbol){
+        if (lastActions) {
+            if (lastActions[0]) {
+                if (lastActions[0].symbol) {
                     lastActions.forEach(la => {
-                        if(la.symbol === "CAIT" && !la.memo.includes("REWARDS")){
+                        if (la.symbol === "CAIT" && !la.memo.includes("REWARDS")) {
                             lastSnake.push({
                                 symbol: la.symbol,
                                 hora: la.time.getHours(),
@@ -79,8 +82,8 @@ function Cait({wax, userAccount, queryJson, setQueryJson}) {
             }
         }
 
-        if(lastSnake[0]){
-            if(lastSnake[0].diff > 60){
+        if (lastSnake[0]) {
+            if (lastSnake[0].diff > 60) {
                 setSnakeDisabled(false);
                 setContagem(0);
             } else {
@@ -93,14 +96,14 @@ function Cait({wax, userAccount, queryJson, setQueryJson}) {
 
     }, [lastActions]);
 
-    useEffect(()=>{
-        
+    useEffect(() => {
+
         const vai = () => {
-            if(contagem <= 1){
+            if (contagem <= 1) {
                 setSnakeDisabled(false);
             }
 
-            if(contagem > 0){
+            if (contagem > 0) {
                 setSnakeDisabled(true);
                 osciladorCait.current = setTimeout(schedule, 1000);
             } else {
@@ -112,61 +115,64 @@ function Cait({wax, userAccount, queryJson, setQueryJson}) {
     })
 
     /*botão para pegar as moedas*/
-    async function onClick(){
+    async function onClick() {
 
-        //console.log("queryJsonOnClick: ", queryJson);
-        if(!wax.api) {
-            return document.getElementById('responseCait').append('* Login first *');
-        }
+        if (!snakeDisabled) {
+            //console.log("queryJsonOnClick: ", queryJson);
+            if (!wax.api) {
+                return document.getElementById('responseCait').append('* Login first *');
+            }
 
-        try {
-            const result = await wax.api.transact({
-                actions: [{
-                    account: 'faucet.gm',
-                    name: 'claim',
-                    authorization: [{
-                    actor: wax.userAccount,
-                    permission: 'active',
-                    }],
-                    data: {
-                        user: wax.userAccount,
-                    },
-                }]
+            try {
+                const result = await wax.api.transact({
+                    actions: [{
+                        account: 'faucet.gm',
+                        name: 'claim',
+                        authorization: [{
+                            actor: wax.userAccount,
+                            permission: 'active',
+                        }],
+                        data: {
+                            user: wax.userAccount,
+                        },
+                    }]
                 }, {
-                blocksBehind: 3,
-                expireSeconds: 30
-            });
+                    blocksBehind: 3,
+                    expireSeconds: 30
+                });
 
-            setContractReturn(result.transaction_id);
-            setContagem(3600);
-            setSnakeDisabled(true);
-        } catch(e) {
-            setContractReturn('error: ' + e.message);
+                setContractReturn(result.transaction_id);
+                setContagem(3600);
+                setSnakeDisabled(true);
+            } catch (e) {
+                setContractReturn('error: ' + e.message);
+            }
         }
     }
 
     return (
-        <div  >
-            {userAccount && 
+        <>
+            {userAccount &&
                 <>
-                    {userAccount && 
-                    <div>
-                        <p>Claim your CAIT: </p>
-                        <button className="btnlogin" onClick={onClick} disabled={snakeDisabled}>
-                                Gimme dat!
-                        </button>
-                        <br />
-                        {snakeDisabled && <div>
-                            {snakeDisplay}
-                        </div>}
-                        <div>
-                            <code id="responseCait"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View Last Transaction</a></code>
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={onClick}>
+                            <div className="image-cropper"><img src={cait} alt="CAIT" className="logoCoin"></img></div>
+                            <div >
+                                {snakeDisabled && <div className="displayTimer">
+                                    {snakeDisplay}
+                                </div>}
+                                <div>
+                                    {contractReturn.includes('error')
+                                        ? <code id="responseCait">{contractReturn}</code>
+                                        : <code id="responseCait"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View on Bloks</a></code>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     }
                 </>
             }
-        </div>
+        </>
     );
 }
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function Snake({wax, userAccount, queryJson, setQueryJson}) {
+import nova from '../assets/nova.jpg';
+
+function Snake({ wax, userAccount, queryJson, setQueryJson }) {
 
     //const [queryJson, setQueryJson] = useState([{}]);
     const [lastActions, setLastActions] = useState([{}]);
@@ -12,20 +14,20 @@ function Snake({wax, userAccount, queryJson, setQueryJson}) {
     let osciladorSnake = useRef();
 
 
-    function getDiffMinutes(d){
-        return Math.floor(((Date.now() - d)/1000)/60)
+    function getDiffMinutes(d) {
+        return Math.floor(((Date.now() - d) / 1000) / 60)
     }
 
-    function schedule(){
-        if(contagem > 0){
+    function schedule() {
+        if (contagem > 0) {
             setContagem(contagem - 1);
-            if(contagem - 1 === 0){
+            if (contagem - 1 === 0) {
                 setSnakeDisabled(false);
-            }if(contagem === 1){
+            } if (contagem === 1) {
                 setSnakeDisabled(false);
             }
             //osciladorSnake.current = setTimeout(schedule, 1000);
-            setSnakeDisplay("Next claim: " + new Date(contagem * 1000).toISOString().substr(11, 8).toString());
+            setSnakeDisplay(new Date(contagem * 1000).toISOString().substr(11, 8).toString());
         } else {
             clearTimeout(osciladorSnake.current);
             setSnakeDisabled(false);
@@ -45,7 +47,8 @@ function Snake({wax, userAccount, queryJson, setQueryJson}) {
     useEffect(() => {
         let tratado = [];
 
-        if(queryJson[0].act){
+        if (queryJson[0].act) {
+            clearTimeout(osciladorSnake.current);
             tratado = queryJson.map(q => {
                 let data_corrigida = new Date(new Date(q.timestamp).setHours(new Date(q.timestamp).getHours() - (new Date(q.timestamp).getTimezoneOffset() / 60)))
 
@@ -59,17 +62,17 @@ function Snake({wax, userAccount, queryJson, setQueryJson}) {
         }
 
         setLastActions(tratado);
-  
+
     }, [queryJson]);
 
     useEffect(() => {
-        let lastSnake =[];
+        let lastSnake = [];
 
-        if(lastActions){
-            if(lastActions[0]){
-                if(lastActions[0].symbol){
+        if (lastActions) {
+            if (lastActions[0]) {
+                if (lastActions[0].symbol) {
                     lastActions.forEach(la => {
-                        if(la.symbol === "SNAKOIL"){
+                        if (la.symbol === "SNAKOIL") {
                             lastSnake.push({
                                 symbol: la.symbol,
                                 hora: la.time.getHours(),
@@ -82,8 +85,8 @@ function Snake({wax, userAccount, queryJson, setQueryJson}) {
             }
         }
 
-        if(lastSnake[0]){
-            if(lastSnake[0].diff > 60){
+        if (lastSnake[0]) {
+            if (lastSnake[0].diff > 60) {
                 setSnakeDisabled(false);
                 setContagem(0);
             } else {
@@ -96,13 +99,13 @@ function Snake({wax, userAccount, queryJson, setQueryJson}) {
 
     }, [lastActions]);
 
-    useEffect(()=>{
+    useEffect(() => {
         const vai = () => {
-            if(contagem <= 1){
+            if (contagem <= 1) {
                 setSnakeDisabled(false);
             }
 
-            if(contagem > 0){
+            if (contagem > 0) {
                 setSnakeDisabled(true);
                 osciladorSnake.current = setTimeout(schedule, 1000);
             } else {
@@ -114,61 +117,64 @@ function Snake({wax, userAccount, queryJson, setQueryJson}) {
     })
 
     /*botão para pegar as moedas*/
-    async function onClick(){
+    async function onClick() {
 
-        //console.log("queryJsonOnClick: ", queryJson);
-        if(!wax.api) {
-            return document.getElementById('responseSnake').append('* Login first *');
-        }
+        if (!snakeDisabled) {
+            //console.log("queryJsonOnClick: ", queryJson);
+            if (!wax.api) {
+                return document.getElementById('responseSnake').append('* Login first *');
+            }
 
-        try {
-            const result = await wax.api.transact({
-                actions: [{
-                    account: 'novarallysnk',
-                    name: 'claim',
-                    authorization: [{
-                    actor: wax.userAccount,
-                    permission: 'active',
-                    }],
-                    data: {
-                        username: wax.userAccount,
-                    },
-                }]
+            try {
+                const result = await wax.api.transact({
+                    actions: [{
+                        account: 'novarallysnk',
+                        name: 'claim',
+                        authorization: [{
+                            actor: wax.userAccount,
+                            permission: 'active',
+                        }],
+                        data: {
+                            username: wax.userAccount,
+                        },
+                    }]
                 }, {
-                blocksBehind: 3,
-                expireSeconds: 30
-            });
+                    blocksBehind: 3,
+                    expireSeconds: 30
+                });
 
-            setContractReturn(result.transaction_id);
-            setContagem(3600);
-        } catch(e) {
-            setContractReturn('error: ' + e.message);
-            setContagem(3600);
+                setContractReturn(result.transaction_id);
+                setContagem(3600);
+            } catch (e) {
+                setContractReturn('error: ' + e.message);
+                setContagem(3600);
+            }
         }
     }
 
     return (
-        <div  >
-            {userAccount && 
+        <>
+            {userAccount &&
                 <>
-                    {userAccount && 
-                    <div>
-                        <p>Claim your SNAKOIL: </p>
-                        <button className="btnlogin" onClick={onClick} disabled={snakeDisabled}>
-                                Gimme dat!
-                        </button>
-                        <br />
-                        {snakeDisabled && <div>
-                            {snakeDisplay}
-                        </div>}
-                        <div>
-                            <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View Last Transaction</a></code>
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={onClick}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                {snakeDisabled && <div className="displayTimer">
+                                    {snakeDisplay}
+                                </div>}
+                                <div>
+                                    {contractReturn.includes('error')
+                                        ? <code id="responseSnake">{contractReturn}</code>
+                                        : <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View on Bloks</a></code>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     }
                 </>
             }
-        </div>
+        </>
     );
 }
 
