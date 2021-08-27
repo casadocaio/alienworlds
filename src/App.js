@@ -21,7 +21,11 @@ function App() {
     if (userAccount) {
       fetch('https://api.waxsweden.org/v2/history/get_actions?limit=1000&skip=0&account=' + userAccount + '&sort=desc')
         .then(response => response.json())
-        .then(data => setQueryJson(data.actions));
+        .then(data => {
+          if(userAccount === 'z5tbm.wam'){console.log('data', data);}
+          setQueryJson(data.actions)
+          } 
+        );
     }
 
   }, [userAccount]);
