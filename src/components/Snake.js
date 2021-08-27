@@ -85,13 +85,15 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
             }
         }
 
-        if (lastSnake[0]) {
-            if (lastSnake[0].diff > 60) {
-                setSnakeDisabled(false);
-                setContagem(0);
-            } else {
-                setSnakeDisabled(true);
-                setContagem((60 - lastSnake[0].diff) * 60);
+        if (lastSnake) {
+            if (lastSnake[0]) {
+                if (lastSnake[0].diff > 60) {
+                    setSnakeDisabled(false);
+                    setContagem(0);
+                } else {
+                    setSnakeDisabled(true);
+                    setContagem((60 - lastSnake[0].diff) * 60);
+                }
             }
         }
 
@@ -142,6 +144,8 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                     blocksBehind: 3,
                     expireSeconds: 30
                 });
+
+                console.log('result', result);
 
                 setContractReturn(result.transaction_id);
                 setContagem(3600);

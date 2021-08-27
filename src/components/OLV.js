@@ -82,13 +82,15 @@ function OLV({ wax, userAccount, queryJson, setQueryJson }) {
             }
         }
 
-        if (lastSnake[0]) {
-            if (lastSnake[0].diff > 60) {
-                setSnakeDisabled(false);
-                setContagem(0);
-            } else {
-                setSnakeDisabled(true);
-                setContagem((60 - lastSnake[0].diff) * 60);
+        if (lastSnake) {
+            if (lastSnake[0]) {
+                if (lastSnake[0].diff > 60) {
+                    setSnakeDisabled(false);
+                    setContagem(0);
+                } else {
+                    setSnakeDisabled(true);
+                    setContagem((60 - lastSnake[0].diff) * 60);
+                }
             }
         }
 
