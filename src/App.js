@@ -5,6 +5,7 @@ import Snake from './components/Snake';
 import Cait from './components/Cait';
 import OLV from './components/OLV';
 import TLM from './components/TLM';
+import AW from './components/AW';
 
 import './App.css';
 
@@ -50,6 +51,20 @@ function App() {
       </div>
       {userAccount &&
         <div>
+          <div>
+            <AW
+              userAccount={userAccount}
+              setUserAccount={setUserAccount}
+              donateValue={donateValue}
+              setDonateValue={setDonateValue}
+              pubKeys={pubKeys}
+              setPubKeys={setPubKeys}
+              wax={wax}
+              setWax={setWax}
+              queryJson={queryJson}
+              setQueryJson={setQueryJson}
+            />
+          </div>
           <div>
             <Cait
               userAccount={userAccount}
