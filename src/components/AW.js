@@ -362,7 +362,8 @@ function AW({ wax, userAccount, queryJson, setQueryJson }) {
                 });
                 console.log('result', result);
                 setContractReturn(result.transaction_id);
-                setLabel(result.processed.action_traces[0].act.inline_traces[0].act.data.quantity);
+                //setLabel(result.processed.action_traces[0].act.inline_traces[0].act.data.quantity);
+                setLabel(result.processed.action_traces[0].inline_traces[0].act.data.quantity);
                 setContagem(1230);
                 setSnakeDisabled(true);
             } catch (e) {
