@@ -104,10 +104,33 @@ function AW({ wax, userAccount, queryJson, setQueryJson }) {
         return ms_until_mine;
     };*/
 
+    useEffect(() => {
+        if (contagem <= 1) {
+            setSnakeDisabled(false);
+        }
+
+        if (contagem > 0) {
+            setSnakeDisabled(true);
+            osciladorAW.current = setTimeout(schedule, 1000);
+        } else {
+            //setSnakeDisabled(false);
+            clearTimeout(osciladorAW.current);
+        }
+    },[contagem])
+
 
     useEffect(() => {
+        buscarUltimaMineracao();
+    },[]);
+
+
+    /*useEffect(() => {
 
         const vai = () => {
+
+            //buscarUltimaMineracao();
+
+            console.log('contagem', contagem);
             if (contagem <= 1) {
                 setSnakeDisabled(false);
             }
@@ -119,10 +142,75 @@ function AW({ wax, userAccount, queryJson, setQueryJson }) {
                 //setSnakeDisabled(false);
                 clearTimeout(osciladorAW.current);
             }
+
+            //buscarUltimaMineracao();
         };
         vai();
-    })
+    })*/
+    
 
+    /*botão para pegar as moedas*/
+    async function buscarUltimaMineracao() {
+
+        //console.log('nameToArray(z5tbm.wam)', nameToArray('z5tbm.wam'));
+        //return;
+
+        fetch('https://api.waxsweden.org/v1/chain/get_table_rows', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "json": true,
+                "code": "m.federation",
+                "scope": "m.federation",
+                "table": "miners",
+                "lower_bound": wax.userAccount,
+                "upper_bound": wax.userAccount,
+                "index_position": 1,
+                "key_type": "",
+                "limit": "100",
+                "reverse": false,
+                "show_payer": false
+              }),
+            })
+        .then(response => response.json())
+        .then(data => {
+            //console.log('Success:', data);
+            let ms_until_mine = -1;
+            const now = new Date().getTime();
+
+            let lastM="";
+        
+            if (data.rows.length && data.rows[0].last_mine_tx !== '0000000000000000000000000000000000000000000000000000000000000000'){
+                console.log(`Last mine was at ${data.rows[0].last_mine}, now is ${new Date()}`);
+                const last_mine_ms = Date.parse(data.rows[0].last_mine + '.000Z');
+                ms_until_mine = last_mine_ms + (360 * 1000) - now;
+
+                lastM = data.rows[0].last_mine_tx.substr(0, 16);
+
+                //console.log('getDiffMinutes(last_mine_ms)', getDiffMinutes(last_mine_ms));
+
+                //clearTimeout(osciladorAW.current);
+
+                let minutos = wax.userAccount ==='aumu.wam' ? 10 : 20;
+
+                if (getDiffMinutes(last_mine_ms) > minutos) {
+                    //setSnakeDisabled(false);
+                    setContagem(0);
+                    //clearTimeout(osciladorAW.current);
+                } else {
+                    //setSnakeDisabled(true);
+                    setContagem((minutos - getDiffMinutes(last_mine_ms)) * 60);
+                    //osciladorAW.current = setTimeout(schedule, 1000);
+                }
+        
+                if (ms_until_mine < 0){
+                    ms_until_mine = 0;
+                }
+            }
+        })
+    }
 
     /*botão para pegar as moedas*/
     async function onClick() {
@@ -168,12 +256,14 @@ function AW({ wax, userAccount, queryJson, setQueryJson }) {
 
                 clearTimeout(osciladorAW.current);
 
-                if (getDiffMinutes(last_mine_ms) > 20) {
+                let minutos = wax.userAccount ==='aumu.wam' ? 10 : 20;
+
+                if (getDiffMinutes(last_mine_ms) > minutos) {
                     setSnakeDisabled(false);
                     setContagem(0);
                 } else {
                     setSnakeDisabled(true);
-                    setContagem((20 - getDiffMinutes(last_mine_ms)) * 60);
+                    setContagem((minutos - getDiffMinutes(last_mine_ms)) * 60);
                 }
         
                 if (ms_until_mine < 0){
@@ -364,7 +454,10 @@ function AW({ wax, userAccount, queryJson, setQueryJson }) {
                 setContractReturn(result.transaction_id);
                 //setLabel(result.processed.action_traces[0].act.inline_traces[0].act.data.quantity);
                 setLabel(result.processed.action_traces[0].inline_traces[0].act.data.quantity);
-                setContagem(1230);
+
+                let minutos = wax.userAccount ==='aumu.wam' ? 615 : 1230;
+
+                setContagem(minutos);
                 setSnakeDisabled(true);
             } catch (e) {
                 setContractReturn('error: ' + e.message);
