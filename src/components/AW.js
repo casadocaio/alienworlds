@@ -116,11 +116,13 @@ function AW({ wax, userAccount, queryJson, setQueryJson }) {
             //setSnakeDisabled(false);
             clearTimeout(osciladorAW.current);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[contagem])
 
 
     useEffect(() => {
         buscarUltimaMineracao();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
 
 
@@ -180,14 +182,14 @@ function AW({ wax, userAccount, queryJson, setQueryJson }) {
             let ms_until_mine = -1;
             const now = new Date().getTime();
 
-            let lastM="";
+            //let lastM="";
         
             if (data.rows.length && data.rows[0].last_mine_tx !== '0000000000000000000000000000000000000000000000000000000000000000'){
                 console.log(`Last mine was at ${data.rows[0].last_mine}, now is ${new Date()}`);
                 const last_mine_ms = Date.parse(data.rows[0].last_mine + '.000Z');
                 ms_until_mine = last_mine_ms + (360 * 1000) - now;
 
-                lastM = data.rows[0].last_mine_tx.substr(0, 16);
+                //lastM = data.rows[0].last_mine_tx.substr(0, 16);
 
                 //console.log('getDiffMinutes(last_mine_ms)', getDiffMinutes(last_mine_ms));
 
