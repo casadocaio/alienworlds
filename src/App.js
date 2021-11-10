@@ -17,7 +17,7 @@ function App() {
   const [wax, setWax] = useState();
   const [queryJson, setQueryJson] = useState([{}]);
 
-  useEffect(() => {
+  /*useEffect(() => {
 
     if (userAccount) {
       fetch('https://api.waxsweden.org/v2/history/get_actions?limit=1000&skip=0&account=' + userAccount + '&sort=desc')
@@ -29,7 +29,7 @@ function App() {
         );
     }
 
-  }, [userAccount]);
+  }, [userAccount]);*/
 
   return (
     <div className="App">

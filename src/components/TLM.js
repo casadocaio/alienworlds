@@ -29,7 +29,7 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
 
         //console.log('veio montar tratado');
 
-        if (queryJson[0].act) {
+        if (queryJson && queryJson[0].act) {
             tratado = queryJson.map(q => {
                 let data_corrigida = new Date(new Date(q.timestamp).setHours(new Date(q.timestamp).getHours() - (new Date(q.timestamp).getTimezoneOffset() / 60)))
 
