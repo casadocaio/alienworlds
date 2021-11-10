@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 
 import TopBar from './components/TopBar';
 import Snake from './components/Snake';
