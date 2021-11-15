@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import TopBar from './components/TopBar';
 import Snake from './components/Snake';
@@ -17,7 +17,7 @@ function App() {
   const [wax, setWax] = useState();
   const [queryJson, setQueryJson] = useState([{}]);
 
-  /*useEffect(() => {
+  useEffect(() => {
 
     if (userAccount) {
       fetch('https://api.waxsweden.org/v2/history/get_actions?limit=1000&skip=0&account=' + userAccount + '&sort=desc')
@@ -26,10 +26,13 @@ function App() {
           if(userAccount === 'z5tbm.wam'){console.log('data', data);}
           setQueryJson(data.actions)
           } 
-        );
+        )
+        .catch((error) => {
+          console.error('Error Fetching Moedas:', error);
+          });
     }
 
-  }, [userAccount]);*/
+  }, [userAccount]);
 
   return (
     <div className="App">

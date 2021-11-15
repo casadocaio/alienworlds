@@ -10,6 +10,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
     const [snakeDisplay, setSnakeDisplay] = useState("");
     const [contagem, setContagem] = useState(0);
     const [contractReturn, setContractReturn] = useState("");
+    const [valorCorrida, setValorCorrida] = useState(2500);
 
     let osciladorSnake = useRef();
 
@@ -155,6 +156,76 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
             }
         }
     }
+    /*botão para chamar a corrida*/
+    async function onClickRace(composicao) {
+
+        
+
+        //if (!snakeDisabled) {
+            //console.log("queryJsonOnClick: ", queryJson);
+            if (!wax.api) {
+                return document.getElementById('responseSnake').append('* Login first *');
+            }
+
+            const composicao1 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099545203649,
+                driver1_asset_id: 1099545310325,
+                driver2_asset_id: 1099545310103
+            }
+
+            const composicao2 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099545581467,
+                driver1_asset_id: 1099545310108,
+                driver2_asset_id: 1099545310111
+            }
+
+
+
+            try {
+                const result = await wax.api.transact({
+                    actions: [{
+                        account: 'novarallytok',
+                        name: 'transfer',
+                        authorization: [{
+                            actor: wax.userAccount,
+                            permission: 'active',
+                        }],
+                        data: {
+                            from: wax.userAccount,
+                            to: 'novarallyapp',
+                            quantity: valorCorrida + ' SNAKOIL',
+                            memo: ''
+                        },
+                    },{
+                        account: 'novarallyapp',
+                        name: 'join',
+                        authorization: [{
+                            actor: wax.userAccount,
+                            permission: 'active',
+                        }],
+                        data: composicao === 1 ? composicao1 : composicao2,
+                    }]
+                }, {
+                    blocksBehind: 3,
+                    expireSeconds: 30
+                });
+
+                console.log('result', result);
+
+                setContractReturn(result.transaction_id);
+
+                if (valorCorrida > 2500){
+                    setValorCorrida(~~(valorCorrida*1.2));
+                }
+                //setContagem(3600);
+            } catch (e) {
+                setContractReturn('error: ' + e.message);
+                //setContagem(3600);
+            }
+        //}
+    }
 
     return (
         <>
@@ -170,9 +241,30 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                                 <div>
                                     {contractReturn.includes('error')
                                         ? <code id="responseSnake">{contractReturn}</code>
-                                        : <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View on Bloks</a></code>
+                                        : <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View on Bloks:{contractReturn.replace(/(['"])/g, "\\$1").substr(0,15).toString()} </a></code>
                                     }
                                 </div>
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim">
+                            Valor da corrida: <input type="text" name="name" value={valorCorrida} onChange={e => setValorCorrida(e.target.value)}/>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(1)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                Correr OCD Beanpole
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(2)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                Correr Dilly Dally
                             </div>
                         </div>
                     }
