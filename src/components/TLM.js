@@ -161,7 +161,9 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
 
          try {
             if (userAccount) {
-                fetch('https://api.waxsweden.org/v2/history/get_actions?limit=1000&skip=0&account=' + userAccount + '&sort=desc'
+                let qtd = 1000;
+
+                fetch('https://api.waxsweden.org/v2/history/get_actions?limit=' + qtd + '&skip=0&account=' + userAccount + '&sort=desc'
                 /*, {
                     method: 'GET', // *GET, POST, PUT, DELETE, etc.
                     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -174,6 +176,25 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
         }
     }
 
+    function onClickTLM(){
+
+        try {
+           if (userAccount) {
+               let qtd =250;
+
+               fetch('https://api.waxsweden.org/v2/history/get_actions?limit=' + qtd + '&filter=alien.worlds%3A*&skip=0&account=' + userAccount + '&sort=desc'
+               /*, {
+                   method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                   referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                 }*/)
+                   .then(response => response.json())
+                   .then(data => setQueryJson(data.actions));
+           }
+       } catch(e) {
+           console.log('error: ' + e.message);
+       }
+   }
+
     return (
         <div  >
             {userAccount &&
@@ -184,6 +205,9 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
                             <p>
                                 <button className="btnAtualizar" onClick={onClick} >
                                     Atualizar
+                                </button>
+                                <button className="btnAtualizar" onClick={onClickTLM} >
+                                    Atualizar TLM
                                 </button>
                             </p>
                             <table id="simple-board">

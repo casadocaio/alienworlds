@@ -9,6 +9,8 @@ import AW from './components/AW';
 
 import './App.css';
 
+import pqno from './assets/pqno.jpg';
+
 function App() {
 
   const [userAccount, setUserAccount] = useState("");
@@ -20,16 +22,19 @@ function App() {
   useEffect(() => {
 
     if (userAccount) {
-      fetch('https://api.waxsweden.org/v2/history/get_actions?limit=1000&skip=0&account=' + userAccount + '&sort=desc')
+
+      let qtd = 1000;
+
+      fetch('https://api.waxsweden.org/v2/history/get_actions?limit=' + qtd + '&skip=0&account=' + userAccount + '&sort=desc')
         .then(response => response.json())
         .then(data => {
-          if(userAccount === 'z5tbm.wam'){console.log('data', data);}
+          if (userAccount === 'z5tbm.wam') { console.log('data', data); }
           setQueryJson(data.actions)
-          } 
+        }
         )
         .catch((error) => {
           console.error('Error Fetching Moedas:', error);
-          });
+        });
     }
 
   }, [userAccount]);
@@ -123,6 +128,12 @@ function App() {
               queryJson={queryJson}
               setQueryJson={setQueryJson}
             />
+          </div>
+          <div className="fichaClaim">
+            <div className=""><img src={pqno} alt="Pqno" className="logoCoin"></img></div>
+            <div >
+              Pqno Games
+            </div>
           </div>
         </div>
       }
