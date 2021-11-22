@@ -181,7 +181,25 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                 driver2_asset_id: 1099545310111
             }
 
+            const composicao3 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099545310320,
+                driver1_asset_id: 1099545310116,
+                driver2_asset_id: 1099545310109
+            }
 
+            let composicaoEscolhida = {};
+
+            switch (composicao) {
+                case 2:
+                    composicaoEscolhida = composicao2;
+                  break;
+                case 3:
+                    composicaoEscolhida = composicao3;
+                  break;
+                default:
+                    composicaoEscolhida = composicao1;
+              }
 
             try {
                 const result = await wax.api.transact({
@@ -205,7 +223,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                             actor: wax.userAccount,
                             permission: 'active',
                         }],
-                        data: composicao === 1 ? composicao1 : composicao2,
+                        data: composicaoEscolhida,
                     }]
                 }, {
                     blocksBehind: 3,
@@ -265,6 +283,14 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                             <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
                             <div >
                                 Correr Dilly Dally
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(3)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                Correr Scape Vorder
                             </div>
                         </div>
                     }
