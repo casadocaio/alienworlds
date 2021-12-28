@@ -11,6 +11,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
     const [contagem, setContagem] = useState(0);
     const [contractReturn, setContractReturn] = useState("");
     const [valorCorrida, setValorCorrida] = useState(2500);
+    const [auxMsg, setAuxMsg] = useState("");
 
     let osciladorSnake = useRef();
 
@@ -160,7 +161,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
     async function onClickRace(composicao) {
 
         
-
+        setAuxMsg(composicao);
         //if (!snakeDisabled) {
             //console.log("queryJsonOnClick: ", queryJson);
             if (!wax.api) {
@@ -176,12 +177,26 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
 
             const composicao2 = {
                 player: wax.userAccount,
+                vehicle_asset_id: 1099583590996,
+                driver1_asset_id: 1099545254485,
+                driver2_asset_id: 1099576913791
+            }
+
+            const composicao3 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099570211902,
+                driver1_asset_id: 1099581066293,
+                driver2_asset_id: 1099545310435
+            }
+
+            const composicao4 = {
+                player: wax.userAccount,
                 vehicle_asset_id: 1099545581467,
                 driver1_asset_id: 1099545310108,
                 driver2_asset_id: 1099545310111
             }
 
-            const composicao3 = {
+            const composicao5 = {
                 player: wax.userAccount,
                 vehicle_asset_id: 1099545310320,
                 driver1_asset_id: 1099545310116,
@@ -196,6 +211,12 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                   break;
                 case 3:
                     composicaoEscolhida = composicao3;
+                  break;
+                case 4:
+                    composicaoEscolhida = composicao4;
+                  break;
+                  case 5:
+                    composicaoEscolhida = composicao5;
                   break;
                 default:
                     composicaoEscolhida = composicao1;
@@ -245,6 +266,15 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
         //}
     }
 
+    function onAdd20Perc(){
+
+        try {
+            setValorCorrida(~~(valorCorrida*1.2));
+       } catch(e) {
+           console.log('error 20%: ' + e.message);
+       }
+    }
+
     return (
         <>
             {userAccount &&
@@ -259,7 +289,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                                 <div>
                                     {contractReturn.includes('error')
                                         ? <code id="responseSnake">{contractReturn}</code>
-                                        : <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View on Bloks:{contractReturn.replace(/(['"])/g, "\\$1").substr(0,15).toString()} </a></code>
+                                        : <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>Compo: {auxMsg} - View on Bloks:{contractReturn.replace(/(['"])/g, "\\$1").substr(0,15).toString()} </a></code>
                                     }
                                 </div>
                             </div>
@@ -268,6 +298,9 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                     {userAccount &&
                         <div className="fichaClaim">
                             Valor da corrida: <input type="text" name="name" value={valorCorrida} onChange={e => setValorCorrida(e.target.value)}/>
+                            <button className="btnAtualizar" onClick={onAdd20Perc} >
+                                    +20%
+                                </button>
                         </div>
                     }
                     {userAccount &&
@@ -282,12 +315,28 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                         <div className="fichaClaim" onClick={() => onClickRace(2)}>
                             <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
                             <div >
-                                Correr Dilly Dally
+                                Correr Raag Man Sammy Snek
                             </div>
                         </div>
                     }
                     {userAccount &&
                         <div className="fichaClaim" onClick={() => onClickRace(3)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                Correr Serpent Dilly Dally
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(4)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                Correr Dilly Dally
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(5)}>
                             <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
                             <div >
                                 Correr Scape Vorder
