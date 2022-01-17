@@ -203,6 +203,100 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                 driver2_asset_id: 1099545310109
             }
 
+            const composicao6 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099568514316,
+                driver1_asset_id: 1099545203051,
+                driver2_asset_id: 1099545232373
+            }
+
+            const composicao7 = {
+                    player: wax.userAccount,
+                    vehicle_asset_id: 1099545334065,
+                    driver1_asset_id: 1099554379749,
+                    driver2_asset_id: 1099545310321
+            }
+    
+            const composicao8 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099567816486,
+                driver1_asset_id: 1099545204416,
+                driver2_asset_id: 1099545235420
+            }
+
+            const composicao9 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099545245936,
+                driver1_asset_id: 1099545241980,
+                driver2_asset_id: 1099545310441
+            }
+
+            const composicao10 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099545199111,
+                driver1_asset_id: 1099545234264,
+                driver2_asset_id: 1099545293200
+            }
+
+            const composicao11 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099570495962,
+                driver1_asset_id: 1099545310105,
+                driver2_asset_id: 1099545310120
+            }
+
+            const composicao12 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099598174203,
+                driver1_asset_id: 1099545310113,
+                driver2_asset_id: 1099545210157
+            }
+
+            const composicao13 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099569070025,
+                driver1_asset_id: 1099545246473,
+                driver2_asset_id: 1099606055485
+            }
+
+            const composicao14 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099579968334,
+                driver1_asset_id: 1099606037004,
+                driver2_asset_id: 1099545293788
+            }
+
+            const composicao15 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099586531856,
+                driver1_asset_id: 1099566379421,
+                driver2_asset_id: 1099606011877
+            }
+
+            const composicao16 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099576007909,
+                driver1_asset_id: 1099545179789,
+                driver2_asset_id: 1099545340768
+            }
+
+            const composicao17 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099570049334,
+                driver1_asset_id: 1099545334470,
+                driver2_asset_id: 1099545229433
+            }
+
+            const composicao18 = {
+                player: wax.userAccount,
+                vehicle_asset_id: 1099568894184,
+                driver1_asset_id: 1099545290589,
+                driver2_asset_id: 1099545329996
+            }
+
+
+
+
             let composicaoEscolhida = {};
 
             switch (composicao) {
@@ -217,6 +311,45 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                   break;
                   case 5:
                     composicaoEscolhida = composicao5;
+                  break;
+                  case 6:
+                    composicaoEscolhida = composicao6;
+                  break;
+                  case 7:
+                    composicaoEscolhida = composicao7;
+                  break;
+                  case 8:
+                    composicaoEscolhida = composicao8;
+                  break;
+                  case 9:
+                    composicaoEscolhida = composicao9;
+                  break;
+                  case 10:
+                    composicaoEscolhida = composicao10;
+                  break;
+                  case 11:
+                    composicaoEscolhida = composicao11;
+                  break;
+                  case 12:
+                    composicaoEscolhida = composicao12;
+                  break;
+                  case 13:
+                    composicaoEscolhida = composicao13;
+                  break;
+                  case 14:
+                    composicaoEscolhida = composicao14;
+                  break;
+                  case 15:
+                    composicaoEscolhida = composicao15;
+                  break;
+                  case 16:
+                    composicaoEscolhida = composicao16;
+                  break;
+                  case 17:
+                    composicaoEscolhida = composicao17;
+                  break;
+                  case 18:
+                    composicaoEscolhida = composicao18;
                   break;
                 default:
                     composicaoEscolhida = composicao1;
@@ -289,7 +422,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                                 <div>
                                     {contractReturn.includes('error')
                                         ? <code id="responseSnake">{contractReturn}</code>
-                                        : <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>Compo: {auxMsg} - View on Bloks:{contractReturn.replace(/(['"])/g, "\\$1").substr(0,15).toString()} </a></code>
+                                        : <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View TX:{contractReturn.replace(/(['"])/g, "\\$1").substr(0,15).toString()} </a></code>
                                     }
                                 </div>
                             </div>
@@ -340,6 +473,110 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                             <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
                             <div >
                                 Correr Scape Vorder
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(6)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                6
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(7)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                7
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(8)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                8
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(9)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                9
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(10)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                10
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(11)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                11
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(12)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                12
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(13)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                13
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(14)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                14
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(15)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                15
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(16)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                16
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(17)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                17
+                            </div>
+                        </div>
+                    }
+                    {userAccount &&
+                        <div className="fichaClaim" onClick={() => onClickRace(18)}>
+                            <div className="image-cropper"><img src={nova} alt="NovaRally" className="logoCoin"></img></div>
+                            <div >
+                                18
                             </div>
                         </div>
                     }

@@ -74,6 +74,20 @@ function App() {
             />
           </div>
           <div>
+            <OLV
+              userAccount={userAccount}
+              setUserAccount={setUserAccount}
+              donateValue={donateValue}
+              setDonateValue={setDonateValue}
+              pubKeys={pubKeys}
+              setPubKeys={setPubKeys}
+              wax={wax}
+              setWax={setWax}
+              queryJson={queryJson}
+              setQueryJson={setQueryJson}
+            />
+          </div>
+          <div>
             <Cait
               userAccount={userAccount}
               setUserAccount={setUserAccount}
@@ -89,20 +103,6 @@ function App() {
           </div>
           <div>
             <Snake
-              userAccount={userAccount}
-              setUserAccount={setUserAccount}
-              donateValue={donateValue}
-              setDonateValue={setDonateValue}
-              pubKeys={pubKeys}
-              setPubKeys={setPubKeys}
-              wax={wax}
-              setWax={setWax}
-              queryJson={queryJson}
-              setQueryJson={setQueryJson}
-            />
-          </div>
-          <div>
-            <OLV
               userAccount={userAccount}
               setUserAccount={setUserAccount}
               donateValue={donateValue}
