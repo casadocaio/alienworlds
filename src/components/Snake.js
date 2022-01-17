@@ -11,7 +11,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
     const [contagem, setContagem] = useState(0);
     const [contractReturn, setContractReturn] = useState("");
     const [valorCorrida, setValorCorrida] = useState(2500);
-    const [auxMsg, setAuxMsg] = useState("");
+    //const [auxMsg, setAuxMsg] = useState("");
 
     let osciladorSnake = useRef();
 
@@ -161,7 +161,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
     async function onClickRace(composicao) {
 
         
-        setAuxMsg(composicao);
+        //setAuxMsg(composicao);
         //if (!snakeDisabled) {
             //console.log("queryJsonOnClick: ", queryJson);
             if (!wax.api) {
