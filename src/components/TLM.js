@@ -7,6 +7,12 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
     const [lstMedia, setLstMedia] = useState([{}]);
     const [rows, setRows] = useState([]);
 
+    const [filtroMoeda, setFiltroMoeda] = useState('alien.worlds');
+    const [symbol, setSymbol] = useState('TLM');
+    const [includes, setIncludes] = useState('Mined Trilium');
+
+    
+
     function getDiffMinutes(d) {
         return Math.floor(((Date.now() - d) / 1000) / 60)
     }
@@ -25,11 +31,50 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
     */
 
     useEffect(() => {
+        if (filtroMoeda) {
+            switch (filtroMoeda) {
+                case 'tokencrafter':
+                    setSymbol('CAIT');
+                  break;
+                case 'niftywizards':
+                    setSymbol('DUST');
+                  break;
+                case 'token.nefty':
+                    setSymbol('NEFTY');
+                  break;
+                case 't.taco':
+                    setSymbol('SHING');
+                  break;
+                default:
+                  setSymbol('TLM');
+              }
+        }
+        if (filtroMoeda) {
+            switch (filtroMoeda) {
+                case 'tokencrafter':
+                    setIncludes('LP REWARDS');
+                  break;
+                case 'niftywizards':
+                    setIncludes('Dice');
+                  break;
+                case 'token.nefty':
+                    setIncludes('Claim');
+                  break;
+                case 't.taco':
+                    setIncludes('reward claim');
+                  break;
+                default:
+                    setIncludes('Mined Trilium');
+              }
+        }
+    }, [filtroMoeda]);
+
+    useEffect(() => {
         let tratado = [];
 
         //console.log('veio montar tratado');
 
-        if (queryJson[0].act) {
+        if (queryJson && queryJson[0].act) {
             tratado = queryJson.map(q => {
                 let data_corrigida = new Date(new Date(q.timestamp).setHours(new Date(q.timestamp).getHours() - (new Date(q.timestamp).getTimezoneOffset() / 60)))
 
@@ -54,10 +99,10 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
             if (lastActions[0]) {
                 if (lastActions[0].symbol) {
                     lastActions.forEach(la => {
-                        if (la.symbol === "TLM" && la.memo.includes("Mined Trilium")) {
+                        if (la.symbol === symbol && la.memo.includes(includes)) {
                             lastSnake.push({
                                 symbol: la.symbol,
-                                quantity: la.quantity.replace(' TLM', ''),
+                                quantity: la.quantity.replace(' ' + symbol, ''),
                                 time: la.time,
                                 day: la.time.getDate(),
                                 hora: la.time.getHours(),
@@ -113,7 +158,7 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
 
         //console.log('lastSnake', lastSnake);
 
-    }, [lastActions]);
+    }, [includes, lastActions, symbol]);
 
     function dadosDia(dados, dia) {
         return dados.filter(dd => {
@@ -161,7 +206,9 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
 
          try {
             if (userAccount) {
-                fetch('https://api.waxsweden.org/v2/history/get_actions?limit=1000&skip=0&account=' + userAccount + '&sort=desc'
+                let qtd = 1000;
+
+                fetch('https://api.waxsweden.org/v2/history/get_actions?limit=' + qtd + '&filter=' + filtroMoeda + '%3A*&skip=0&account=' + userAccount + '&sort=desc'
                 /*, {
                     method: 'GET', // *GET, POST, PUT, DELETE, etc.
                     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -180,10 +227,22 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
                 <>
                     {userAccount &&
                         <div>
-                            <p>Alien Worlds stats: </p>
+                            <p>Escolha a moeda para consulta: </p>
                             <p>
+                                <select 
+                                    id="moedas" 
+                                    name="moedas"
+                                    value={filtroMoeda}
+                                    onChange={e => setFiltroMoeda(e.target.value)}
+                                >
+                                    <option value="tokencrafter">CAIT</option>
+                                    <option value="niftywizards">DUST</option>
+                                    <option value="token.nefty">Nefty</option>
+                                    <option value="t.taco">Shing</option>
+                                    <option value="alien.worlds">TLM</option>
+                                </select>
                                 <button className="btnAtualizar" onClick={onClick} >
-                                    Atualizar
+                                    Tacalepau marcos!
                                 </button>
                             </p>
                             <table id="simple-board">

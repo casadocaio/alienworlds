@@ -43,7 +43,7 @@ function OLV({ wax, userAccount, queryJson, setQueryJson }) {
     useEffect(() => {
         let tratado = [];
 
-        if (queryJson[0].act) {
+        if (queryJson && queryJson[0].act) {
             clearTimeout(osciladorOLV.current);
             tratado = queryJson.map(q => {
                 let data_corrigida = new Date(new Date(q.timestamp).setHours(new Date(q.timestamp).getHours() - (new Date(q.timestamp).getTimezoneOffset() / 60)))

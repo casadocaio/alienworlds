@@ -10,6 +10,8 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
     const [snakeDisplay, setSnakeDisplay] = useState("");
     const [contagem, setContagem] = useState(0);
     const [contractReturn, setContractReturn] = useState("");
+    //const [valorCorrida, setValorCorrida] = useState(2500);
+    //const [auxMsg, setAuxMsg] = useState("");
 
     let osciladorSnake = useRef();
 
@@ -47,7 +49,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
     useEffect(() => {
         let tratado = [];
 
-        if (queryJson[0].act) {
+        if (queryJson && queryJson[0].act) {
             clearTimeout(osciladorSnake.current);
             tratado = queryJson.map(q => {
                 let data_corrigida = new Date(new Date(q.timestamp).setHours(new Date(q.timestamp).getHours() - (new Date(q.timestamp).getTimezoneOffset() / 60)))
@@ -155,7 +157,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
             }
         }
     }
-
+  
     return (
         <>
             {userAccount &&
@@ -170,7 +172,7 @@ function Snake({ wax, userAccount, queryJson, setQueryJson }) {
                                 <div>
                                     {contractReturn.includes('error')
                                         ? <code id="responseSnake">{contractReturn}</code>
-                                        : <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View on Bloks</a></code>
+                                        : <code id="responseSnake"><a href={"https://wax.bloks.io/transaction/" + contractReturn.replace(/(['"])/g, "\\$1")}>View TX:{contractReturn.replace(/(['"])/g, "\\$1").substr(0,15).toString()} </a></code>
                                     }
                                 </div>
                             </div>
