@@ -43,7 +43,20 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
                     setSymbol('NEFTY');
                   break;
                 case 't.taco':
+                case 't.tacoR':
                     setSymbol('SHING');
+                  break;
+                case 'token.grF':
+                    setSymbol('FLORIA');
+                  break;
+                case 'token.grS':
+                    setSymbol('SAP');
+                  break;
+                case 'token.grV':
+                    setSymbol('VERSAT');
+                  break;
+                case 'token.grN':
+                    setSymbol('NANORE');
                   break;
                 default:
                   setSymbol('TLM');
@@ -60,8 +73,17 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
                 case 'token.nefty':
                     setIncludes('Claim');
                   break;
+                case 't.tacoR':
+                    setIncludes('referral claim');
+                  break;
                 case 't.taco':
                     setIncludes('reward claim');
+                  break;
+                case 'token.grF':
+                case 'token.grS':
+                case 'token.grV':
+                case 'token.grN':
+                    setIncludes('');
                   break;
                 default:
                     setIncludes('Mined Trilium');
@@ -73,8 +95,9 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
         let tratado = [];
 
         //console.log('veio montar tratado');
+        //console.log('vqueryJson', queryJson);
 
-        if (queryJson && queryJson[0].act) {
+        if (queryJson && queryJson[0] && queryJson[0].act) {
             tratado = queryJson.map(q => {
                 let data_corrigida = new Date(new Date(q.timestamp).setHours(new Date(q.timestamp).getHours() - (new Date(q.timestamp).getTimezoneOffset() / 60)))
 
@@ -205,10 +228,28 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
     function onClick(){
 
          try {
+            setQueryJson([{}]);
+
             if (userAccount) {
                 let qtd = 1000;
 
-                fetch('https://api.waxsweden.org/v2/history/get_actions?limit=' + qtd + '&filter=' + filtroMoeda + '%3A*&skip=0&account=' + userAccount + '&sort=desc'
+                let filtrotratado = '';
+
+                switch (filtroMoeda) {
+                    case 't.tacoR':
+                        filtrotratado = 't.taco';
+                      break;
+                    case 'token.grF':
+                    case 'token.grS':
+                    case 'token.grV':
+                    case 'token.grN':
+                        filtrotratado = 'token.gr';
+                      break;
+                    default:
+                        filtrotratado = filtroMoeda;
+                  }
+
+                fetch('https://api.waxsweden.org/v2/history/get_actions?limit=' + qtd + '&filter=' + filtrotratado + '%3A*&skip=0&account=' + userAccount + '&sort=desc'
                 /*, {
                     method: 'GET', // *GET, POST, PUT, DELETE, etc.
                     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
@@ -233,13 +274,21 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
                                     id="moedas" 
                                     name="moedas"
                                     value={filtroMoeda}
-                                    onChange={e => setFiltroMoeda(e.target.value)}
-                                >
+                                    onChange={e => {
+                                            setLstMedia([]);
+                                            setFiltroMoeda(e.target.value);
+                                        }
+                                    }>
                                     <option value="tokencrafter">CAIT</option>
                                     <option value="niftywizards">DUST</option>
                                     <option value="token.nefty">Nefty</option>
                                     <option value="t.taco">Shing</option>
+                                    <option value="t.tacoR">Shing refer</option>
                                     <option value="alien.worlds">TLM</option>
+                                    <option value="token.grF">Floria</option>
+                                    <option value="token.grS">Sap</option>
+                                    <option value="token.grV">Versat</option>
+                                    <option value="token.grN">Nanore</option>
                                 </select>
                                 <button className="btnAtualizar" onClick={onClick} >
                                     Tacalepau marcos!
