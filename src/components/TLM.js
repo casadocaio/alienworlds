@@ -39,6 +39,9 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
                 case 'niftywizards':
                     setSymbol('DUST');
                   break;
+                case 'stoned':
+                    setSymbol('DUST');
+                  break;
                 case 'token.nefty':
                     setSymbol('NEFTY');
                   break;
@@ -70,6 +73,9 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
                 case 'niftywizards':
                     setIncludes('Dice');
                   break;
+                case 'stoned':
+                    setIncludes('Stoned Warlords');
+                  break;
                 case 'token.nefty':
                     setIncludes('Claim');
                   break;
@@ -95,7 +101,7 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
         let tratado = [];
 
         //console.log('veio montar tratado');
-        //console.log('vqueryJson', queryJson);
+        console.log('vqueryJson', queryJson);
 
         if (queryJson && queryJson[0] && queryJson[0].act) {
             tratado = queryJson.map(q => {
@@ -122,7 +128,7 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
             if (lastActions[0]) {
                 if (lastActions[0].symbol) {
                     lastActions.forEach(la => {
-                        if (la.symbol === symbol && la.memo.includes(includes)) {
+                        if (la.symbol === symbol && la.memo.includes(includes) && !la.memo.includes('WAX@') ) {
                             lastSnake.push({
                                 symbol: la.symbol,
                                 quantity: la.quantity.replace(' ' + symbol, ''),
@@ -239,6 +245,9 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
                     case 't.tacoR':
                         filtrotratado = 't.taco';
                       break;
+                    case 'stoned':
+                        filtrotratado = 'niftywizards';
+                      break;
                     case 'token.grF':
                     case 'token.grS':
                     case 'token.grV':
@@ -281,6 +290,7 @@ function TLM({ userAccount, queryJson, setQueryJson }) {
                                     }>
                                     <option value="tokencrafter">CAIT</option>
                                     <option value="niftywizards">DUST</option>
+                                    <option value="stoned">DUST SWL</option>
                                     <option value="token.nefty">Nefty</option>
                                     <option value="t.taco">Shing</option>
                                     <option value="t.tacoR">Shing refer</option>
