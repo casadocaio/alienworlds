@@ -1,4 +1,5 @@
-"headers": [
+{
+  "headers": [
   {
     "source": "/(.*\\.unityweb)",
     "headers" : [
@@ -54,3 +55,4 @@
     ]
   }
 ]
+}
