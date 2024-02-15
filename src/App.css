@@ -1,95 +1,53 @@
-:root {
-  --cinzaclaro:#BFBFBF;
-  --cinzaescuro:#585759;
-  --azulescuro:#0487D9;
-  --azulclaro:#05AFF2;
-  --marrom:#A67665;
-}
-
-.App{
- display: flex;
- flex-flow: row wrap;
- justify-content: center;
- background-color: var(--cinzaclaro);
-}
-
-.topbar {
-  background-color: var(--cinzaclaro);
-  min-height: 80px;
-  width: 100%;
-  height: 100%;
+.App {
   text-align: center;
 }
 
-.padrao {
-  min-height: 80px;
-  width: 100%;
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
 }
 
-.btnlogin {
-  align-content: center;
+.App-capa {
+  height: 10vmin;
+  pointer-events: none;
 }
 
-.fichaClaim{
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #17181b;
+  min-height: 100vh;
   display: flex;
-  flex-flow: row wrap;
-  flex-grow: 1;
-  justify-content: space-around;
+  flex-direction: column;
   align-items: center;
-  width: 400px;
-  cursor: pointer;
-  background-color: var(--marrom);
-  margin: 5px;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
-.fichaTable{
-  flex-grow: 1;
+.App-link {
+  color: #0184a8;
+  font-size: small;
 }
 
-.cabecalho {
-  background-color: var(--cinzaescuro);
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-table {
-  border: 0;
+.waxlogin {
+  background-color: black;
+  border-style: none;
 }
 
-.logoCoin {
-  width: 50px;
-  height: 50px;
-  margin: 10px;
-}
-
-.cabecalhoLogin {
-  font-size: 40px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  color: var(--cinzaescuro);
-}
-
-.displayTimer {
-  font-size: 40px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: bold;
-  color: var(--cinzaescuro);
-}
-
-.image-cropper {
-  max-width: 100px;
-  height: auto;
-  position: relative;
-  overflow: hidden;
-}
-
-.image-cropper img{
-  display: block;
-  margin: 0 auto;
-  height: auto;
-  width: 100%; 
-  margin: 0 0 0 0;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  -ms-border-radius: 50%;
-  -o-border-radius: 50%;
-  border-radius: 50%;  
+.container {
+  display: flex; /* or inline-flex */
 }

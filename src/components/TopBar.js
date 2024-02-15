@@ -1,38 +1,42 @@
 import React, { useEffect } from 'react';
 import * as waxjs from "@waxio/waxjs/dist";
 
-import waxlogo from '../assets/wax.png';
+import waxlogo from '../imgs/WAX_Logo_White_NEU_new2.png';
 
-function TopBar({wax, setWax, userAccount, setUserAccount,pubKeys, setPubKeys}) {
+function TopBar({ wax, setWax, userAccount, setUserAccount, pubKeys, setPubKeys }) {
 
-    function onClick(){
-        //console.log("wax: ", wax);
-        //setWax(new waxjs.WaxJS('https://wax.greymass.com', null, null, false));
-        login();
-      }
-    
-    async function login() {
-        try {
-            setUserAccount(await wax.login());
-            setPubKeys(wax.pubKeys);
-        } catch (e) {
-                
-        }
-    } 
+    async function onClick() {
+        const newWAX = await new waxjs.WaxJS({
+            rpcEndpoint: 'https://wax.greymass.com',
+            tryAutoLogin: false
+          });
+
+          console.log("newWAX: ", newWAX);
+
+          const newUserAccount = await newWAX.login();
+
+          
+          console.log("newUserAccount: ", newUserAccount);
+          setWax(newWAX);
+          setUserAccount(newUserAccount);
+
+    }
 
     useEffect(() => {
-        if(pubKeys){
-          setWax(new waxjs.WaxJS('https://wax.greymass.com', userAccount, pubKeys, false));
+        if (userAccount && pubKeys) {
+            console.log("userAccount effect: ", userAccount);
         }
     }, [userAccount, pubKeys, setWax]);
 
+
     return (
         <div  >
-            {!userAccount && <button className="btnlogin" onClick={onClick}>
-                <img src={waxlogo} alt="Wax Login" />
-                Cloud wallet Login
-            </button>}
-            {userAccount && 
+            {!userAccount
+                && <button className="waxlogin" onClick={onClick}>
+                    <img src={waxlogo} alt="Cloud Wallet Login" />
+                </button>
+            }
+            {userAccount &&
                 <div className="cabecalhoLogin">
                     <p> {userAccount}</p>
                 </div>
